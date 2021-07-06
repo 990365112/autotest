@@ -1,3 +1,4 @@
+import os
 import time
 import pytest
 from selenium import webdriver
@@ -6,7 +7,12 @@ from selenium.webdriver.chrome.options import Options
 class TestUI():
     def setup(self):
         chrome_option = Options()
-        chrome_option.add_argument("--headless")
+        try:
+            using_headless = os.environ["using_headless"]
+        except KeyError:
+            using_headless = None
+        if using_headless is not None and using_headless.lower()=='true':
+            chrome_option.add_argument("--headless")
         self.driver=webdriver.Chrome(options=chrome_option)
         self.driver.maximize_window()
         self.driver.implicitly_wait(5)
